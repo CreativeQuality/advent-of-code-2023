@@ -1,6 +1,6 @@
 package day1;
 
-import helper.IO;
+import base.Puzzle;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,10 +8,18 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-public class Trebuchet {
+public class Trebuchet extends Puzzle {
+
+    public Trebuchet() {
+        super("day1/input.txt");
+    }
+
+    public Trebuchet(String input) {
+        super(input);
+    }
 
     public Integer firstStar() {
-        Stream<String> strings = IO.streamLines("day1/input.txt");
+        Stream<String> strings = streamInput();
         return strings.mapToInt(s -> {
             List<Character> numbers = new ArrayList<>();
             for (char c : s.toCharArray())
@@ -21,7 +29,7 @@ public class Trebuchet {
     }
 
     public Integer secondStar() {
-        Stream<String> strings = IO.streamLines("day1/input.txt");
+        Stream<String> strings = streamInput();
         return strings.mapToInt(s -> {
             List<String> numbers = new ArrayList<>();
             for (int i = 0; i < s.length(); i++) {

@@ -1,6 +1,6 @@
 package day2;
 
-import helper.IO;
+import base.Puzzle;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -8,10 +8,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-public class CubeConundrum {
+public class CubeConundrum extends Puzzle {
+
+    public CubeConundrum() {
+        super("day2/input.txt");
+    }
 
     public Integer firstStar() {
-        Stream<String> games = IO.streamLines("day2/input.txt");
+        Stream<String> games = streamInput();
         Stream<String> possibleGames = games.filter(l ->
                 Arrays.stream(l.substring(l.indexOf(":") + 2).split("[,;]"))
                         .allMatch(this::isPossibleGame));
@@ -40,7 +44,7 @@ public class CubeConundrum {
     }
 
     public Integer secondStar() {
-        Stream<String> games = IO.streamLines("day2/input.txt");
+        Stream<String> games = streamInput();
         return games.map(g -> g.substring(g.indexOf(":") + 2))
                 .mapToInt(g -> findMaximumCubes(g).reduce(1, (a, b) -> a * b))
                 .sum();

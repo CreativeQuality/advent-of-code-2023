@@ -1,5 +1,6 @@
 import day1.Trebuchet;
 import day2.CubeConundrum;
+import day3.GearRatios;
 
 public class AdventOfCode {
 
@@ -13,6 +14,8 @@ public class AdventOfCode {
         output += String.format("Trebuchet: %s, %s\n", trebuchet.firstStar(), trebuchet.secondStar());
         CubeConundrum cubeConundrum = new CubeConundrum();
         output += String.format("Cube Conundrum: %s, %s\n", cubeConundrum.firstStar(), cubeConundrum.secondStar());
+        GearRatios gearRatios = new GearRatios();
+        output += String.format("Gear Ratios: %s, %s", gearRatios.firstStar(), gearRatios.secondStar());
         return output;
     }
 }

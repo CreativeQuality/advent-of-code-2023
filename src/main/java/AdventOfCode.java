@@ -1,4 +1,5 @@
 import day1.Trebuchet;
+import day2.CubeConundrum;
 
 public class AdventOfCode {
 
@@ -10,6 +11,8 @@ public class AdventOfCode {
         String output = "";
         Trebuchet trebuchet = new Trebuchet();
         output += String.format("Trebuchet: %s, %s\n", trebuchet.firstStar(), trebuchet.secondStar());
+        CubeConundrum cubeConundrum = new CubeConundrum();
+        output += String.format("Cube Conundrum: %s, %s\n", cubeConundrum.firstStar(), cubeConundrum.secondStar());
         return output;
     }
 }

@@ -1,6 +1,7 @@
 import day1.Trebuchet;
 import day2.CubeConundrum;
 import day3.GearRatios;
+import day4.Scratchcards;
 
 public class AdventOfCode {
 
@@ -15,7 +16,9 @@ public class AdventOfCode {
         CubeConundrum cubeConundrum = new CubeConundrum();
         output += String.format("Cube Conundrum: %s, %s\n", cubeConundrum.firstStar(), cubeConundrum.secondStar());
         GearRatios gearRatios = new GearRatios();
-        output += String.format("Gear Ratios: %s, %s", gearRatios.firstStar(), gearRatios.secondStar());
+        output += String.format("Gear Ratios: %s, %s\n", gearRatios.firstStar(), gearRatios.secondStar());
+        Scratchcards scratchcards = new Scratchcards();
+        output += String.format("Scratchcards: %s, %s\n", scratchcards.firstStar(), scratchcards.secondStar());
         return output;
     }
 }

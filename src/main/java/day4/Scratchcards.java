@@ -10,8 +10,8 @@ public class Scratchcards extends Puzzle {
 
     public static void main(String[] args) {
         Puzzle puzzle = new Scratchcards();
-        System.out.printf("First star %s: %s", puzzle.getClass(), puzzle.firstStar());
-        System.out.printf("Second star %s: %s", puzzle.getClass(), puzzle.secondStar());
+        System.out.printf("First star %s: %s%n", puzzle.getClass(), puzzle.firstStar());
+        System.out.printf("Second star %s: %s%n", puzzle.getClass(), puzzle.secondStar());
     }
 
     public Scratchcards() {
@@ -22,8 +22,7 @@ public class Scratchcards extends Puzzle {
         Stream<List<Set<Integer>>> cardStream = streamInput().map(l ->
                 Arrays.stream(l.replaceFirst("Card[\\s]+[\\d]+:", "").split("\\|"))
                         .map(s -> {
-                            String[] numbersAsStrings = s.trim().replaceAll("\\s+", ",")
-                                    .split(",");
+                            String[] numbersAsStrings = s.trim().split("\\s+");
                             return Arrays.stream(numbersAsStrings).map(Integer::parseInt).collect(Collectors.toSet());
                         }).toList()
         );
@@ -39,8 +38,7 @@ public class Scratchcards extends Puzzle {
         List<List<Set<Integer>>> cardList = streamInput().map(l ->
                 Arrays.stream(l.replaceFirst("Card[\\s]+[\\d]+:", "").split("\\|"))
                         .map(s -> {
-                            String[] numbersAsStrings = s.trim().replaceAll("\\s+", ",")
-                                    .split(",");
+                            String[] numbersAsStrings = s.trim().split("\\s+");
                             return Arrays.stream(numbersAsStrings).map(Integer::parseInt).collect(Collectors.toSet());
                         }).toList()
         ).toList();

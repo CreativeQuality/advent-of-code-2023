@@ -12,8 +12,8 @@ public class Trebuchet extends Puzzle {
 
     public static void main(String[] args) {
         Puzzle puzzle = new Trebuchet();
-        System.out.printf("First star %s: %s", puzzle.getClass(), puzzle.firstStar());
-        System.out.printf("Second star %s: %s", puzzle.getClass(), puzzle.secondStar());
+        System.out.printf("First star %s: %s%n", puzzle.getClass(), puzzle.firstStar());
+        System.out.printf("Second star %s: %s%n", puzzle.getClass(), puzzle.secondStar());
     }
 
     public Trebuchet() {

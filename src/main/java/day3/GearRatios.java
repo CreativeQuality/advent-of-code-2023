@@ -2,10 +2,15 @@ package day3;
 
 import base.Puzzle;
 
-import java.util.OptionalInt;
 import java.util.Set;
 
 public class GearRatios extends Puzzle {
+
+    public static void main(String[] args) {
+        Puzzle puzzle = new GearRatios();
+        System.out.printf("First star %s: %s", puzzle.getClass(), puzzle.firstStar());
+        System.out.printf("Second star %s: %s", puzzle.getClass(), puzzle.secondStar());
+    }
 
     public GearRatios() {
         super("day3/input.txt");

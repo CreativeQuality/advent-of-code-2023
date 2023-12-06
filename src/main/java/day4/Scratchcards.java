@@ -8,6 +8,12 @@ import java.util.stream.Stream;
 
 public class Scratchcards extends Puzzle {
 
+    public static void main(String[] args) {
+        Puzzle puzzle = new Scratchcards();
+        System.out.printf("First star %s: %s", puzzle.getClass(), puzzle.firstStar());
+        System.out.printf("Second star %s: %s", puzzle.getClass(), puzzle.secondStar());
+    }
+
     public Scratchcards() {
         super("day4/input.txt");
     }

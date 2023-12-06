@@ -11,6 +11,14 @@ public abstract class Puzzle {
         this.resourceLocation = resourceLocation;
     }
 
+    public Object firstStar() {
+        throw new RuntimeException("Not implemented!");
+    }
+
+    public Object secondStar() {
+        throw new RuntimeException("Not implemented!");
+    }
+
     private final String resourceLocation;
 
     public Stream<String> streamInput() {

@@ -1,6 +1,7 @@
 package day2;
 
 import base.Puzzle;
+import day1.Trebuchet;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -9,6 +10,12 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 public class CubeConundrum extends Puzzle {
+
+    public static void main(String[] args) {
+        Puzzle puzzle = new CubeConundrum();
+        System.out.printf("First star %s: %s", puzzle.getClass(), puzzle.firstStar());
+        System.out.printf("Second star %s: %s", puzzle.getClass(), puzzle.secondStar());
+    }
 
     public CubeConundrum() {
         super("day2/input.txt");

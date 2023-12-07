@@ -24,15 +24,14 @@ public class IfYouGiveASeedAFertilizer extends Puzzle {
 
     public IfYouGiveASeedAFertilizer() {
         super("day5/input.txt");
+        initAlmanacMaps(streamInput().toList());
     }
 
     public Long firstStar() {
-        initAlmanacMaps(streamInput().toList());
         return getMinimalLocation(seeds.stream().mapToLong(l -> l));
     }
 
     public Long secondStar() {
-        initAlmanacMaps(streamInput().toList());
         return getMinimalLocation(getRangedSeeds());
     }
 

@@ -9,12 +9,12 @@ class HauntedWasteland(resourceLocation: String = "day8/input.txt") : KtPuzzle(r
 
     private val instructionList = sequenceInput().first().toList()
     private val instructions: InstructionSeq =
-            generateSequence(Pair(instructionList[0], 0)) {
-                Pair(instructionList[(it.second + 1) % instructionList.size], it.second + 1)
-            }
+        generateSequence(Pair(instructionList[0], 0)) {
+            Pair(instructionList[(it.second + 1) % instructionList.size], it.second + 1)
+        }
     private val nodes = sequenceInput().drop(2).associate {
         val (origin, left, right) = """(...) = \((...), (...)\)""".toRegex().find(it)?.destructured
-                ?: throw RuntimeException("Invalid node!")
+            ?: throw RuntimeException("Invalid node!")
         Pair(origin, Pair(left, right))
     }
 
@@ -28,17 +28,17 @@ class HauntedWasteland(resourceLocation: String = "day8/input.txt") : KtPuzzle(r
     }
 
     private tailrec fun move(position: String, instructions: InstructionSeq, isDestination: (String) -> Boolean): Int =
-            if (isDestination(position)) instructions.first().second
-            else when (instructions.first().first) {
-                'L' -> move(nodes[position]!!.first, instructions.drop(1), isDestination)
-                'R' -> move(nodes[position]!!.second, instructions.drop(1), isDestination)
-                else -> throw RuntimeException("Invalid instruction!")
-            }
+        if (isDestination(position)) instructions.first().second
+        else when (instructions.first().first) {
+            'L' -> move(nodes[position]!!.first, instructions.drop(1), isDestination)
+            'R' -> move(nodes[position]!!.second, instructions.drop(1), isDestination)
+            else -> throw RuntimeException("Invalid instruction!")
+        }
 
     private fun findLCM(a: Long, b: Long): Long {
         fun go(a: Long, b: Long, acc: Long): Long =
-                if ((acc % a == 0L && acc % b == 0L) || acc > a * b) acc
-                else go(a, b, acc + max(a, b))
+            if ((acc % a == 0L && acc % b == 0L) || acc > a * b) acc
+            else go(a, b, acc + max(a, b))
         return go(a, b, max(a, b))
     }
 }

@@ -23,25 +23,11 @@ class PipeMaze(resource: String = "day10/input.txt") : KtPuzzle(resource) {
         val updatedEnlargedMaze =
             Maze(enlargedMaze.tiles.map { (k, v) -> if (loop.contains(k)) Pair(k, v) else Pair(k, '░') }.toMap())
         updatedEnlargedMaze.print()
-        val reachable = Maze(findReachable(updatedEnlargedMaze).associateWith { '░' })
+        val reachable = Maze(updatedEnlargedMaze.findReachable().associateWith { '░' })
         reachable.print()
         val enclosedTiles =
             updatedEnlargedMaze.tiles.filter { it.value == '░' && !reachable.hasNode(it.key) && it.key.x % 2 == 0 && it.key.y % 2 == 0 }
         return enclosedTiles.size
-    }
-
-    private fun findReachable(maze: Maze): Set<Coordinate> {
-        tailrec fun find(
-            current: Coordinate, planned: PersistentList<Coordinate>, reachable: PersistentList<Coordinate>
-        ): List<Coordinate> {
-            val neighbors = current.adjacentStraightCoordinates()
-                .filter { maze.hasTile(it, '░') && !planned.contains(it) && !reachable.contains(it) }
-            val newReachable = reachable.add(current)
-            val newPlanned = planned.addAll(neighbors)
-            return if (newPlanned.isEmpty()) newReachable
-            else find(newPlanned[0], newPlanned.removeAt(0), reachable.add(current))
-        }
-        return find(maze.northWestCorner, persistentListOf(), persistentListOf()).toSet()
     }
 
     /**

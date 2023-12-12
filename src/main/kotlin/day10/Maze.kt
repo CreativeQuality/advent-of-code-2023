@@ -13,10 +13,10 @@ class Maze(originalTiles: Map<Coordinate, Char>) {
 
     val tiles: Map<Coordinate, Char>
     val inferredStartValue: Char
-    val northWestCorner: Coordinate = originalTiles.minBy { (k, _) -> k.x + k.y }.key
 
-    private val startNode: Coordinate = originalTiles.filterValues { it == 'S' }.keys.singleOrNull() ?: northWestCorner
+    private val northWestCorner: Coordinate = originalTiles.minBy { (k, _) -> k.x + k.y }.key
     private val southEastCorner: Coordinate = originalTiles.maxBy { (k, _) -> k.x + k.y }.key
+    private val startNode: Coordinate = originalTiles.filterValues { it == 'S' }.keys.singleOrNull() ?: northWestCorner
     private val boxDrawing: Map<Char, Char> =
         mapOf(
             Pair('|', '│'),
@@ -39,8 +39,6 @@ class Maze(originalTiles: Map<Coordinate, Char>) {
 
     fun hasNode(node: Coordinate): Boolean = tiles.containsKey(node)
 
-    fun hasTile(node: Coordinate, value: Char): Boolean = hasNode(node) && tiles[node]!! == value
-
     fun findLoop(): List<Coordinate> {
         tailrec fun findIt(node: Coordinate, path: PersistentList<Coordinate> = persistentListOf()): List<Coordinate> {
             val newPath = path.add(node)
@@ -49,6 +47,20 @@ class Maze(originalTiles: Map<Coordinate, Char>) {
             else findIt(next.first(), newPath)
         }
         return findIt(startNode)
+    }
+
+    fun findReachable(): Set<Coordinate> {
+        tailrec fun find(
+            current: Coordinate, planned: PersistentList<Coordinate>, reachable: PersistentList<Coordinate>
+        ): List<Coordinate> {
+            val neighbors = current.adjacentStraightCoordinates()
+                .filter { hasNode(it) && tiles[it]!! == '░' && !planned.contains(it) && !reachable.contains(it) }
+            val newReachable = reachable.add(current)
+            val newPlanned = planned.addAll(neighbors)
+            return if (newPlanned.isEmpty()) newReachable
+            else find(newPlanned[0], newPlanned.removeAt(0), reachable.add(current))
+        }
+        return find(northWestCorner, persistentListOf(), persistentListOf()).toSet()
     }
 
     fun print() {

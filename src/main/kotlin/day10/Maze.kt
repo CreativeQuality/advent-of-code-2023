@@ -1,6 +1,8 @@
 package day10
 
 import day03.Coordinate
+import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.persistentListOf
 
 class Maze(originalTiles: Map<Coordinate, Char>) {
 
@@ -40,11 +42,11 @@ class Maze(originalTiles: Map<Coordinate, Char>) {
     fun hasTile(node: Coordinate, value: Char): Boolean = hasNode(node) && tiles[node]!! == value
 
     fun findLoop(): List<Coordinate> {
-        tailrec fun findIt(node: Coordinate, path: MutableList<Coordinate> = mutableListOf()): List<Coordinate> {
-            path.add(node)
-            val next = connections(node).filter { !path.contains(it) }
-            return if (next.isEmpty()) path
-            else findIt(next.first(), path)
+        tailrec fun findIt(node: Coordinate, path: PersistentList<Coordinate> = persistentListOf()): List<Coordinate> {
+            val newPath = path.add(node)
+            val next = connections(node).filter { !newPath.contains(it) }
+            return if (next.isEmpty()) newPath
+            else findIt(next.first(), newPath)
         }
         return findIt(startNode)
     }

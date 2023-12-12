@@ -2,6 +2,10 @@ package day10
 
 import base.KtPuzzle
 import day03.Coordinate
+import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.PersistentMap
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentMap
 
 class PipeMaze(resource: String = "day10/input.txt") : KtPuzzle(resource) {
 
@@ -28,22 +32,16 @@ class PipeMaze(resource: String = "day10/input.txt") : KtPuzzle(resource) {
 
     private fun findReachable(maze: Maze): Set<Coordinate> {
         tailrec fun find(
-            current: Coordinate,
-            planned: MutableList<Coordinate> = mutableListOf(),
-            reachable: MutableList<Coordinate> = mutableListOf()
+            current: Coordinate, planned: PersistentList<Coordinate>, reachable: PersistentList<Coordinate>
         ): List<Coordinate> {
             val neighbors = current.adjacentStraightCoordinates()
                 .filter { maze.hasTile(it, '░') && !planned.contains(it) && !reachable.contains(it) }
-            reachable.add(current)
-            planned.addAll(neighbors)
-            if (planned.isEmpty()) return reachable
-            else {
-                val next = planned[0]
-                planned.removeAt(0)
-                return find(next, planned, reachable)
-            }
+            val newReachable = reachable.add(current)
+            val newPlanned = planned.addAll(neighbors)
+            return if (newPlanned.isEmpty()) newReachable
+            else find(newPlanned[0], newPlanned.removeAt(0), reachable.add(current))
         }
-        return find(maze.northWestCorner).toSet()
+        return find(maze.northWestCorner, persistentListOf(), persistentListOf()).toSet()
     }
 
     /**
@@ -70,19 +68,18 @@ class PipeMaze(resource: String = "day10/input.txt") : KtPuzzle(resource) {
                 else -> throw RuntimeException("Invalid node value!")
             }
         }.flatten().toMap()
-        val northWestCorner = enlargedMaze.minBy { (k, _) -> k.x + k.y }.key
-        val southEastCorner = enlargedMaze.maxBy { (k, _) -> k.x + k.y }.key
-        val result: MutableMap<Coordinate, Char> = enlargedMaze.toMutableMap().apply {
-            putAll((northWestCorner.x - 1..(southEastCorner.x + 1))
-                .map { Pair(Coordinate(it, northWestCorner.y - 1), '░') })
-            putAll((northWestCorner.x - 1..(southEastCorner.x + 1))
-                .map { Pair(Coordinate(it, southEastCorner.y + 1), '░') })
-            putAll((northWestCorner.y..(southEastCorner.y))
-                .map { Pair(Coordinate(northWestCorner.x - 1, it), '░') })
-            putAll((northWestCorner.y..(southEastCorner.y))
-                .map { Pair(Coordinate(southEastCorner.x + 1, it), '░') })
-        }
-        return Maze(result.toMap())
+        val nw = enlargedMaze.minBy { (k, _) -> k.x + k.y }.key
+        val se = enlargedMaze.maxBy { (k, _) -> k.x + k.y }.key
+        val result: PersistentMap<Coordinate, Char> = enlargedMaze.toPersistentMap()
+            .putAll((nw.x - 1..(se.x + 1))
+                .associate { Pair(Coordinate(it, nw.y - 1), '░') })
+            .putAll((nw.x - 1..(se.x + 1))
+                .associate { Pair(Coordinate(it, se.y + 1), '░') })
+            .putAll((nw.y..(se.y))
+                .associate { Pair(Coordinate(nw.x - 1, it), '░') })
+            .putAll((nw.y..(se.y))
+                .associate { Pair(Coordinate(se.x + 1, it), '░') })
+        return Maze(result)
     }
 
 }

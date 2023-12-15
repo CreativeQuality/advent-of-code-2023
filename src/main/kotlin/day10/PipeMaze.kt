@@ -17,14 +17,14 @@ class PipeMaze(resource: String = "day10/input.txt") : KtPuzzle(resource) {
 
     override fun secondStar(): Int {
         val maze = Maze.fromString(sequenceInput())
-        maze.print()
+        println(maze)
         val enlargedMaze = enlargeMaze(maze)
         val loop = enlargedMaze.findLoop()
         val updatedEnlargedMaze =
             Maze(enlargedMaze.tiles.map { (k, v) -> if (loop.contains(k)) Pair(k, v) else Pair(k, '░') }.toMap())
-        updatedEnlargedMaze.print()
+        println(updatedEnlargedMaze)
         val reachable = Maze(updatedEnlargedMaze.findReachable().associateWith { '░' })
-        reachable.print()
+        println(reachable)
         val enclosedTiles =
             updatedEnlargedMaze.tiles.filter { it.value == '░' && !reachable.hasNode(it.key) && it.key.x % 2 == 0 && it.key.y % 2 == 0 }
         return enclosedTiles.size

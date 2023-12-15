@@ -63,15 +63,15 @@ class Maze(originalTiles: Map<Coordinate, Char>) {
         return find(northWestCorner, persistentListOf(), persistentListOf()).toSet()
     }
 
-    fun print() {
+    override fun toString(): String {
+        val result = StringBuilder()
         for (y in northWestCorner.x..southEastCorner.y) {
-            var line = ""
             for (x in northWestCorner.y..southEastCorner.x) {
-                line += tiles[Coordinate(x, y)] ?: ' '
+                result.append(tiles[Coordinate(x, y)] ?: ' ')
             }
-            println(line)
+            result.appendLine()
         }
-        println()
+        return result.toString()
     }
 
     private fun connections(

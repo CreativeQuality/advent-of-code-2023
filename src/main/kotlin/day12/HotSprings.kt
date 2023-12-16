@@ -13,12 +13,10 @@ object HotSprings : KtPuzzle("day12/input.txt") {
     private fun process(line: String, folds: Int = 1): Int {
         println("Processing $line")
         val parts = line.split(" ")
-        val record = parts.first()
-        val groups = parts[1].split(",").map { group -> group.toInt() }
-        val foldedRecord = (0..<folds).joinToString("?") { record }
-        val foldedGroups = (0..<folds).flatMap{ groups }
-        val arrangements = fillBlanks(foldedRecord, foldedGroups)
-        val count = arrangements.count { matches(it, foldedGroups) }
+        val records = (0..<folds).joinToString("?") { parts.first() }
+        val groups = (0..<folds).joinToString(",") { parts[1] }.split(",").map { it.toInt() }
+        val arrangements = fillBlanks(records, groups)
+        val count = arrangements.count { matches(it, groups) }
         return count
     }
 

@@ -21,7 +21,7 @@ public abstract class Puzzle {
 
     private final String resourceLocation;
 
-    public Stream<String> streamInput() {
+    protected Stream<String> streamInput() {
         InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(resourceLocation);
         if (inputStream == null)
             return Stream.empty();

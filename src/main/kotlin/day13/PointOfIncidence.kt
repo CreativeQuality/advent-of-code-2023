@@ -25,64 +25,51 @@ class PointOfIncidence(resource: String = "day13/input.txt") : KtPuzzle(resource
     }
 
     override fun firstStar(): Int {
-        val reflections = patterns.map { Pair(findVerticalReflection(it), findHorizontalReflection(it)) }
-        return reflections.sumOf{ (it.first ?: 0) + 100 * (it.second ?: 0) }
+        val reflections = patterns.map { Pair(findVerticalReflections(it), findHorizontalReflections(it)) }
+        return reflections.sumOf{ (it.first.singleOrNull() ?: 0) + 100 * (it.second.singleOrNull() ?: 0) }
     }
 
     override fun secondStar(): Int {
-        val reflections = patterns.asSequence().map { pattern ->
-            val originalVerticalReflection = findVerticalReflection(pattern)
-            val originalHorizontalReflection = findHorizontalReflection(pattern)
+        val reflections: Sequence<Pair<Int?, Int?>> = patterns.asSequence().map { pattern ->
+            val originalVerticalReflection = findVerticalReflections(pattern).singleOrNull()
+            val originalHorizontalReflection = findHorizontalReflections(pattern).singleOrNull()
             val height = pattern.maxOf { it.y }
             val width = pattern.maxOf { it.x }
-            val smudgedPatterns: Sequence<Pattern> = (0..height).asSequence().flatMap { y ->
-                (0..width).asSequence().map { x ->
-                    if (pattern.contains(Coordinate(x, y))) pattern.filterNot { it == Coordinate(x, y) }
+            val smudgedPatterns: Sequence<Pattern> = (1..height).asSequence().flatMap { y ->
+                (1..width).asSequence().map { x ->
+                    if (pattern.contains(Coordinate(x, y))) pattern - Coordinate(x, y)
                     else pattern + Coordinate(x, y)
                 }
             }
-            val smudgedReflections = smudgedPatterns.map {
-                val newVerticalReflection = findVerticalReflection(it)
-                val newHorizontalReflection = findHorizontalReflection(it)
-                val vertical = Pair(originalVerticalReflection, newVerticalReflection)
-                val horizontal = Pair(originalHorizontalReflection, newHorizontalReflection)
-                Pair(vertical, horizontal)
-            }
-            val differentVerticalReflections = smudgedReflections.map{it.first}.filter {
-                it.first != it.second && it.second != null
-            }
-            val differentHorizontalReflections = smudgedReflections.map{it.second}.filter {
-                it.first != it.second && it.second != null
-            }
-            Pair(differentVerticalReflections.firstOrNull()?.second, differentHorizontalReflections.firstOrNull()?.second)
-//            Pair(differentVerticalReflections, differentHorizontalReflections)
+            val newVerticalReflection = smudgedPatterns.flatMap { p ->
+                findVerticalReflections(p)
+            }.filter { it != originalVerticalReflection }.distinct().singleOrNull()
+            val newHorizontalReflection = smudgedPatterns.flatMap { p ->
+                findHorizontalReflections(p)
+            }.filter { it != originalHorizontalReflection }.distinct().singleOrNull()
+            Pair(newVerticalReflection, newHorizontalReflection)
         }
 
         return reflections.sumOf{ (it.first ?: 0) + 100 * (it.second ?: 0) }
-//        return reflections.map{diff ->
-//            val diffsVert: Sequence<Pair<Int?, Int?>> = diff.first
-//            val diffsHoriz: Sequence<Pair<Int?, Int?>> = diff.second
-//            diffsVert.map { vert -> vert.second ?: 0 }.sum() + 100 * diffsHoriz.map { horiz -> horiz.second ?: 0 }.sum()
-//        }.sum()
     }
 
-    private fun findHorizontalReflection(pattern: Pattern): Int? {
+    private fun findHorizontalReflections(pattern: Pattern): List<Int> {
         val height = pattern.maxOf { it.y }
-        val reflection = (1..<height).mapNotNull { y ->
+        val reflections = (1..<height).mapNotNull { y ->
             val distanceToEdge = min(y - 1, height - y - 1)
             if ((0..distanceToEdge).all { d ->
-                    val left = pattern.filter { it.y == y - d }
-                    val right = pattern.filter { it.y == y + 1 + d }
-                    left.all { l -> right.any { r -> l.x == r.x } }
-                            && right.all { r -> left.any { l -> l.x == r.x } }
+                    val top = pattern.filter { it.y == y - d }
+                    val bottom = pattern.filter { it.y == y + 1 + d }
+                    top.all { l -> bottom.any { r -> l.x == r.x } }
+                            && bottom.all { r -> top.any { l -> l.x == r.x } }
                 }) y else null
         }
-        return reflection.singleOrNull()
+        return reflections
     }
 
-    private fun findVerticalReflection(pattern: Pattern): Int? {
+    private fun findVerticalReflections(pattern: Pattern): List<Int> {
         val width = pattern.maxOf { it.x }
-        val reflection = (1..<width).mapNotNull { x ->
+        val reflections = (1..<width).mapNotNull { x ->
             val distanceToEdge = min(x - 1, width - x - 1)
             if ((0..distanceToEdge).all { d ->
                     val left = pattern.filter { it.x == x - d }
@@ -91,7 +78,7 @@ class PointOfIncidence(resource: String = "day13/input.txt") : KtPuzzle(resource
                             && right.all { r -> left.any { l -> l.y == r.y } }
                 }) x else null
         }
-        return reflection.singleOrNull()
+        return reflections
     }
 }
 
